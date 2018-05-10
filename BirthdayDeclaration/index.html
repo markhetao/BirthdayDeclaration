@@ -25,27 +25,43 @@
        }
 
        .birth{
-            width: 80%;
+            display: flex;
+            display: -webkit-flex;
+            width: 50%;
             height:80px;
             margin: auto;
             font-size:20px;
             text-align: center;
        }
+       .birth *{
+        box-sizing: border-box;
+       }
+       .birthLab{
+            width: 110px;
+            display:block;
+            float:left;
+            line-height: 44px;
+            text-align: left;
+       }
        .birthdate{
-            width: 40%;
+            text-indent: 8px;
+            flex: 1;
             height: 40px;
             font-size: 18px;
             letter-spacing: 0px;
             color: grey;
+            float:left;
+            margin: 0 20px; 
        }
        .birthSearch{
-            width: 16%;
+            width:140px;
             height:44px;
             font-size:20px;
+            float:left;
        }
 
        .result{
-            width:54%;
+            width:50%;
             height: 200px;
             text-align: center;
             margin: 0 auto;
@@ -77,10 +93,9 @@
             line-height: 24px;
        }
 
-
        .birthSay{
-            width: 80%;
-            height:80px;
+            width: 50%;
+            height:120px;
             margin: auto;
             font-size:30px;
             text-align: center;
@@ -92,14 +107,21 @@
             line-height: 50px;
             letter-spacing:6px;
        }
+       .birthSay2{
+            display: flex;
+            display: -webkit-flex;
+       }
        .birthSayContent{
+            flex: 1;
+            text-indent: 16px;
             width:50%; 
             height:40px;
             font-size:14px;
             letter-spacing: 2px;
+            margin: 0 20px; 
        }
        .birthSaySave{
-            width:16%; 
+            width:140px; 
             height:44px;
             font-size:20px;;
        }
@@ -122,7 +144,7 @@
     </div>
 
     <div class="birth ">
-        <label class = "birthLab">出生日期：</label>
+        <span class = "birthLab">出生日期：</span>
         <input class ="birthdate" id="birthday" type="date" value= "" />
         <button class = "birthSearch" id = "search"> 搜 索 </button>
     </div>
@@ -131,14 +153,16 @@
 
     <div class = "result hide">
         <p  class="resultName ">出生宣言 :</p>
-        <p  class="resultValue" id = "resultValue">这里是出生宣言!这里是出生宣言!这里是出生宣言!这里是出生宣言!这里是出生宣言!这里是出生宣言!</p>
+        <p  class="resultValue" id = "resultValue">这里是出生宣言!</p>
         <p class="authorP"><div  class="author" id="author">作者：XXXXXX</div></p>
     </div>
 
     <div class="birthSay hide">
         <div class = "birthSayTit">这一天还没有人写出生宣言，赶紧抢占吧！</div>
-        <input class ="birthSayContent" type="text" id="birthSayContent" placeholder= "    请输入出生宣言" />
-        <button class = "birthSaySave" id = "save"> 添 加 </button>
+        <div class = "birthSay2">
+            <input class ="birthSayContent" type="text" id="birthSayContent" placeholder= "请输入出生宣言" />
+            <button class = "birthSaySave" id = "save"> 添 加 </button>
+        </div>
     </div>
 </div>
 
