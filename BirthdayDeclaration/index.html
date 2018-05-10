@@ -193,12 +193,14 @@ getNowFormatDate();
 
     "use strict";
 
-    var dappAddress = "n1otX1U4TpeJRbMwf1djE3xSogrzwDwDfyT";
+    // var dappAddress = "n1otX1U4TpeJRbMwf1djE3xSogrzwDwDfyT"; //测试网环境
+    var dappAddress = "n1q2MBDvny9cSrUNpQaq1xmykuZsdWvy6MS";//主网环境
 
     var nebulas = require("nebulas"),
         Account = nebulas.Account,
         neb = new nebulas.Neb();
-    neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"));
+    //neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"));//测试网环境
+    neb.setRequest(new nebulas.HttpRequest("https://mainnet.nebulas.io"));//主网环境
 
     $("#search").click(function(){
         
