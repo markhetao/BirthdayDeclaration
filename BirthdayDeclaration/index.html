@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no">
+    <title>BirthdaySay</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+       .contenner{
+            background: url("img/bg.png") no-repeat; 
+            background-size: 100% 100%;
+            height: 1500px;
+       }
+       .logo{
+            height:500px;
+       }
+       .name{
+            text-align: center;
+            font-size: 66PX;
+            text-shadow: 3px 5px grey,1px 1px #333;
+       }
+       .img{
+            margin-top: 38px;
+            text-align: center;
+       }
+
+       .birth{
+            width: 36%;
+            height:80px;
+            margin: auto;
+            font-size:30px;
+       }
+       .birthdate{
+            width: 40%;
+            height: 40px;
+            font-size: 20px;
+       }
+       .birthSearch{
+            width: 24%;
+            height:50px;
+            font-size:20px;
+       }
+
+       .result{
+            height: 200px;
+            width:36%;
+            text-align: center;
+            margin: 0 auto;
+       }
+       .resultName{
+            width: 100%;
+            line-height: 42px;
+            text-align: left;
+            font-size: 20px;
+       }
+       .resultValue{
+            position: relative;
+            text-align: left;
+            font-size: 24px;
+            color: #ff6cbb;
+       }
+       .author{
+            text-align: right;
+            font-size:10px;
+       }
+       .authorP{
+            width: 100%;
+            text-align: right;
+            font-size: 18px;
+       }
+
+
+       .birthSay{
+            width: 50%;
+            height:80px;
+            margin: auto;
+            font-size:30px;
+            text-align: center;
+       }
+       .birthSayTit{
+            font-size: 18px;
+            height: 48px;
+            color: #ff28e1;
+            margin-top: 20px;
+
+       }
+       .birthSayContent{
+            width:50%; 
+            height:50px;
+            font-size:30px;
+       }
+       .birthSaySave{
+            width:20%; 
+            height:50px;
+            font-size:20px;;
+       }
+
+
+       .hide{
+          display: none;
+       }
+
+    </style>
+</head>
+
+<body>
+<div class="contenner">
+    <div class="logo">
+        <div class="name">BIRTHDAYSAY</div>
+        <div class="img">
+            <img src="img/logo.png" >
+        </div>
+    </div>
+
+    <div class="birth ">
+        <label class = "birthLab">出生日期：</label>
+        <input class ="birthdate" id="birthday" type="date" value= "" />
+        <button class = "birthSearch" id = "search"> 搜 索 </button>
+    </div>
+
+    <hr style="height:1px;border:none;border-top:1px dashed #0066CC;" />
+
+    <div class = "result hide">
+        <p  class="resultName ">出生宣言 :</p>
+        <p  class="resultValue" id = "resultValue">这里是出生宣言!这里是出生宣言!这里是出生宣言!这里是出生宣言!这里是出生宣言!这里是出生宣言!</p>
+        <p class="authorP"><div  class="author" id="author">作者：XXXXXX</div></p>
+    </div>
+
+    <div class="birthSay hide">
+        <div class = "birthSayTit">这一天还没有人写出生宣言，赶紧抢占吧！</div>
+        <input class ="birthSayContent" type="text" id="birthSayContent" placeholder= "请输入出生宣言" />
+        <button class = "birthSaySave" id = "save"> 添 加 </button>
+    </div>
+</div>
+
+
+<script src=lib/jquery-3.3.1.min.js></script>
+<script src=lib/nebPay.js></script>
+<script src=lib/bootstrap-4.0.0-dist/js/bootstrap.min.js></script>
+<script src=lib/nebulas.js></script>
+
+<script type="text/javascript">
+    function getNowFormatDate() {
+        var date = new Date();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = date.getFullYear() + "-" + month + "-" + strDate;
+        $("#birthday").val(currentdate) ;
+}
+getNowFormatDate();
+</script>
+
+<script>
+
+    "use strict";
+
+    var dappAddress = "n1otX1U4TpeJRbMwf1djE3xSogrzwDwDfyT";
+
+    var nebulas = require("nebulas"),
+        Account = nebulas.Account,
+        neb = new nebulas.Neb();
+    neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"));
+
+    $("#search").click(function(){
+        
+        var day = $("#birthday").val();
+        day = day.trim();
+        console.log("出生日期:"+day);
+        if(!day ||day ===""){
+          alert('请选择出生日期');
+          return;
+        }
+
+        var from = Account.NewAccount().getAddressString();
+        var value = "0";
+        var nonce = "0";
+        var gas_price = "1000000";
+        var gas_limit = "2000000";
+        var callFunction = "get";
+        var callArgs = "[\""+ $("#birthday").val() +"\"]";
+        var contract = {
+          "function":callFunction,
+          "args":callArgs
+        }
+        // console.log("contract:"+JSON.stringify(contract));
+
+        neb.api.call(from,dappAddress,value,nonce,gas_price,gas_limit,contract).then(
+            function(resp){
+            cbSearch(resp);
+        }).catch(function(err){
+              console.log("error:"+err.message)
+        })
+     });
+
+    function cbSearch(resp){
+        var result = resp.result;
+
+        console.log("result:"+JSON.stringify(result));
+
+        if(result === 'null'){
+            $(".result").addClass("hide");
+            $(".birthSay").removeClass("hide");
+        }else{
+            try{
+              result = JSON.parse(result);
+            }catch(err){
+
+            }
+
+            if (!!result) {
+                $(".result").removeClass("hide");
+                $(".birthSay").addClass("hide");
+
+                $("#resultValue").html(result.content);
+                $("#author").html("作者:"+result.author);
+            }else{
+                console.log("$$$$$$$$$$$$");
+                $(".result").removeClass("hide");
+                $(".birthSay").addClass("hide");
+
+                $("#resultValue").val(result);
+                $("#author").val("");
+            }
+        }
+    }
+
+    var NebPay = require("nebpay");     //https://github.com/nebulasio/nebPay
+    var nebPay = new NebPay();
+    var serialNumber
+
+    $("#save").click(function(){  
+        $(".result").addClass("hide");
+        $(".birthSay").removeClass("hide");
+
+        var content = $("#birthSayContent").val();
+        content = content.trim();
+        if(!content ||content ===""){
+          alert('请输入出生宣言');
+        }
+        else{
+           var to = dappAddress;
+           var value = "0";
+           var callFunction = "save";
+           var callArgs = "[\"" + $("#birthday").val() + "\",\"" + $("#birthSayContent").val() + "\"]"
+           serialNumber = nebPay.call(to, value, callFunction, callArgs, {    //使用nebpay的call接口去调用合约,
+            listener: cbPush        //设置listener, 处理交易返回信息
+           });
+           intervalQuery = setInterval(function () {
+            funcIntervalQuery();
+            }, 5000);
+         }
+
+    });
+
+    var intervalQuery;
+   
+    function funcIntervalQuery(){
+      nebPay.queryPayInfo(serialNumber)
+          .then(function(resp){
+            console.log("支付结果:"+resp);
+            var respObject = JSON.parse(resp);
+            if(respObject.code ===0){
+              alert($("#birthday").val()+'的出生宣言添加成功！');
+            }
+          }).catch(function(err){
+            console.log(err);
+          });
+    }
+    function cbPush(resp){
+       console.log("response of push:"+JSON.stringify(resp));
+    }
+
+</script>
+</body>
+
+</html>
